@@ -1,19 +1,19 @@
-from sqlalchemy import Column, Integer as Int, String, ForeignKey
-from sqlalchemy.orm import relationship
+# from sqlalchemy import Column, Integer as Int, String, ForeignKey
 from iaas import db
 from passlib.apps import custom_app_context as pwd_context
 
 
 class User(db.Model):
-    __tablename__ = 'users'
-    id = Column(Int, primary_key = True)
-    username = Column(String(32), index = True)
-    password_hash = Column(String(128))
-    integers = relationship('Integer', backref='user')
+    __tablename__ = 'user'
+    id = db.Column(db.Integer, primary_key = True)
+    username = db.Column(db.String(32), index = True)
+    password_hash = db.Column(db.String(128))
+    integers = db.relationship('Integer', backref='user', lazy='dynamic')
 
-    def __init__(self, username=None, password_hash=None):
+    def __init__(self, username=None, password_hash=None, integers=[]):
         self.username = username
         self.password_hash = password_hash
+        self.integers = integers
 
     def hash_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
@@ -24,16 +24,17 @@ class User(db.Model):
     def json(self):
         return {
             'id': self.id,
-            'username': self.username
+            'username': self.username,
+            'integers': self.integers
         }
 
 
 class Integer(db.Model):
-    __tablename__ = 'integers'
-    id = Column(Int, primary_key=True)
-    label = Column(String, unique=False)
-    value = Column(Int, unique=False)
-    user_id = Column(Int, ForeignKey('users.id'))
+    __tablename__ = 'integer'
+    id = db.Column(db.Integer, primary_key=True)
+    label = db.Column(db.String, unique=False)
+    value = db.Column(db.Integer, unique=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, value=None, label=None, token=None):
         self.label = label
