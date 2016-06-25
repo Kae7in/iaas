@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 import os
 
 
@@ -12,6 +13,12 @@ app.config['SERVER_NAME']='localhost:5000'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + os.getcwd() + '/integers.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 db = SQLAlchemy(app)
+
+
+# Login Manager congfiguration
+app.secret_key = 'kaelin says hyperloop is the future'
+login_manager = LoginManager()
+login_manager.init_app(app)
 
 
 from iaas.dev import dev_blueprint

@@ -5,17 +5,31 @@ from passlib.apps import custom_app_context as pwd_context
 
 class User(db.Model):
     __tablename__ = 'user'
+
     id = db.Column(db.Integer, primary_key = True)
     username = db.Column(db.String(32), index = True)
     password_hash = db.Column(db.String(128))
     integers = db.relationship('Integer', backref='user', lazy='dynamic')
+    authenticated = db.Column(db.Boolean, default=False)
 
-    def __init__(self, username=None, password_hash=None, integers=[]):
+    def is_authenticated(self):
+        return self.authenticated
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def __init__(self, username=None, password=None, integers=[]):
         self.username = username
-        self.password_hash = password_hash
+        self.set_password(password)
         self.integers = integers
 
-    def hash_password(self, password):
+    def get_id(self):
+        return unicode(self.id)
+
+    def set_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
 
     def verify_password(self, password):

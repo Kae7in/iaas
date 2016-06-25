@@ -1,0 +1,13 @@
+<!doctype html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        {% if current_user.is_authenticated %}
+            Hi {{ current_user.username }}!
+        {% else %}
+            Hello, and welcome to IAAS!
+        {% endif %}
+    </body>
+</html>

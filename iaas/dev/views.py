@@ -1,8 +1,7 @@
 # from flask import render_template
 from flask_restful import abort, reqparse, Resource
 from . import dev, dev_blueprint
-from iaas import models
-from iaas import db
+from iaas import models, db, login_manager
 
 
 parser = reqparse.RequestParser()
@@ -81,3 +80,8 @@ dev.add_resource(IntegerListController, '/integers')
 @dev_blueprint.route('/')
 def devTest():
 	return 'Welcome to the IAAS API!'
+
+
+@login_manager.user_loader
+def load_user(user_id):
+	return models.User.query.filter(models.User.id == user_id).first()
