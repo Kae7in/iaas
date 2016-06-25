@@ -1,7 +1,7 @@
 from flask import render_template, request, abort, redirect, url_for
 from . import site_blueprint
 from iaas import models, db, login_manager
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf import Form
 from wtforms import StringField
 from wtforms.validators import DataRequired
@@ -51,6 +51,18 @@ def login():
 			return redirect(next or url_for('site.home'))
 
 	return render_template('login.html')
+
+
+@site_blueprint.route('/logout')
+@login_required
+def logout():
+	current_user.authenticated = False
+	db.session.add(current_user)
+	db.session.commit()
+
+	logout_user()
+
+	return redirect(url_for('site.home'))
 
 
 @site_blueprint.route('/')
