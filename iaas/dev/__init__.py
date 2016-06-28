@@ -9,6 +9,7 @@ dev_blueprint = Blueprint('dev',
               subdomain='dev'
 )
 
+
 dev = flask_restful.Api()
 dev.init_app(dev_blueprint)
 

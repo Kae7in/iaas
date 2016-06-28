@@ -1,6 +1,7 @@
-# from sqlalchemy import Column, Integer as Int, String, ForeignKey
-from iaas import db
+from iaas import db, app
 from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
+from flask_login import current_user
 
 
 class User(db.Model):
@@ -11,6 +12,12 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     integers = db.relationship('Integer', backref='user', lazy='dynamic')
     authenticated = db.Column(db.Boolean, default=False)
+    api_key = db.Column(db.String(310))
+
+    def __init__(self, username=None, password=None, integers=[]):
+        self.username = username
+        self.set_password(password)
+        self.integers = integers
 
     def is_authenticated(self):
         return self.authenticated
@@ -21,19 +28,34 @@ class User(db.Model):
     def is_anonymous(self):
         return False
 
-    def __init__(self, username=None, password=None, integers=[]):
-        self.username = username
-        self.set_password(password)
-        self.integers = integers
-
     def get_id(self):
         return unicode(self.id)
 
     def set_password(self, password):
         self.password_hash = pwd_context.encrypt(password)
 
-    def verify_password(self, password):
-        return pwd_context.verify(password, self.password_hash)
+    def verify_password(self, password_or_token):
+        return pwd_context.verify(password_or_token, self.password_hash)
+
+    def get_auth_token(self, expiration = 600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({
+            'id': str(self.id),
+            'password_hash': self.password_hash
+        })
+
+    @staticmethod
+    def verify_auth_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None  # Valid token, but expired
+        except BadSignature:
+            return None  # Invalid token
+
+        return User.query.get(data['user_id'])
 
     def json(self):
         return {
@@ -50,10 +72,13 @@ class Integer(db.Model):
     value = db.Column(db.Integer, unique=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, value=None, label=None, token=None):
+    def __init__(self, value=None, label=None, user_id=None):
         self.label = label
         self.value = value
-        self.user_id = token  # TODO: Get user_id from User-Token table
+        if user_id is None:
+            self.user_id = current_user.id
+        else:
+            self.user_id = user_id
 
     def __repr__(self):
         return 'value: %d' % self.value

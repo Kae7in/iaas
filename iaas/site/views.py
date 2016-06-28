@@ -12,43 +12,37 @@ class LoginForm(Form):
 	password = StringField('password', validators=[DataRequired()])
 
 
-@site_blueprint.route('/users', methods = ['POST'])
-def new_user():
-	username = request.form['username']
-	password = request.form['password']
-
-	if username is None or password is None:
-		return "Must provide username and password"
-	if models.User.query.filter(models.User.username == username).first() is not None:
-		return "That username is already taken."
-
-	user = models.User(username=username)
-	user.set_password(password)
-
-	db.add(user)
-	db.commit()
-
-	return str(user.json())
+class JoinForm(Form):
+	username = StringField('username', validators=[DataRequired()])
+	password = StringField('password', validators=[DataRequired()])
+	password_confirm = StringField('password_confirm', validators=[DataRequired()])
 
 
 @site_blueprint.route('/login', methods = ['GET', 'POST'])
 def login():
 	form = LoginForm(csrf_enabled=False)
 	if form.validate_on_submit():
+		# Get fields from form submission
 		username = request.form['username']
 		password = request.form['password']
 
 		if username is None or password is None:
-			return "Must provide both a username and password"
+			return render_template('login.html')
 
+		# Get supposed user object from database
 		user = models.User.query.filter(models.User.username == username).first()
+
+		# Verify credentials
 		if user is not None and user.verify_password(password):
+			# Login user and commit to database before redirecting (order is important here)
 			user.authenticated = True
 			db.session.add(user)
 			db.session.commit()
 			login_user(user, remember=True)
-			next = request.args.get('next')
-			return redirect(next or url_for('site.home'))
+
+			# Redirect
+			next_url = request.args.get('next')
+			return redirect(next_url or url_for('site.home'))
 
 	return render_template('login.html')
 
@@ -56,13 +50,43 @@ def login():
 @site_blueprint.route('/logout')
 @login_required
 def logout():
+	# Logout user and commit to database (order is important here)
 	current_user.authenticated = False
 	db.session.add(current_user)
 	db.session.commit()
-
 	logout_user()
 
 	return redirect(url_for('site.home'))
+
+
+@site_blueprint.route('/join', methods = ['GET', 'POST'])
+def join():
+	form = JoinForm(csrf_enabled=False)
+	if form.validate_on_submit():
+		username = request.form['username']
+		password = request.form['password']
+		password_confirm = request.form['password_confirm']
+
+		if username is None or password is None or password_confirm is None:
+			return render_template('join.html')
+
+		if password != password_confirm:
+			return render_template('join.html')
+
+		# Create new user object
+		new_user = models.User(username=username, password=password)
+
+		# Login user and commit to database before redirecting (order is important here)
+		new_user.authenticated = True
+		db.session.add(new_user)
+		db.session.commit()
+		login_user(new_user, remember=True)
+
+		next_url = request.args.get('next')
+
+		return redirect(next_url or url_for('site.home'))
+
+	return render_template('join.html')
 
 
 @site_blueprint.route('/')

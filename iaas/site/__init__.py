@@ -8,6 +8,7 @@ site_blueprint = Blueprint('site',
               static_folder='./static'
 )
 
+
 dev = flask_restful.Api()
 dev.init_app(site_blueprint)
 
