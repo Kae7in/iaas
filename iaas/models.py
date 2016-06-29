@@ -2,12 +2,20 @@ from iaas import db, app
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 from flask_login import current_user
+from sqlalchemy.dialects.postgresql import UUID
+import uuid
 
+
+id_column_name = "id"
+
+def id_column():
+    import uuid
+    return db.Column(id_column_name, UUID(), primary_key=True, default=uuid.uuid4)
 
 class User(db.Model):
     __tablename__ = 'user'
 
-    id = db.Column(db.Integer, primary_key = True)
+    id = db.Column('id', db.Text(length=36), default=lambda: str(uuid.uuid4()), primary_key=True)
     username = db.Column(db.String(32), index = True)
     password_hash = db.Column(db.String(128))
     integers = db.relationship('Integer', backref='user', lazy='dynamic')
@@ -67,10 +75,10 @@ class User(db.Model):
 
 class Integer(db.Model):
     __tablename__ = 'integer'
-    id = db.Column(db.Integer, primary_key=True)
+    id = db.Column('id', db.Text(length=36), default=lambda: str(uuid.uuid4()), primary_key=True)
     label = db.Column(db.String, unique=False)
     value = db.Column(db.Integer, unique=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Text(length=36), db.ForeignKey('user.id'), default=lambda: str(uuid.uuid4()))
 
     def __init__(self, value=None, label=None, user_id=None):
         self.label = label
