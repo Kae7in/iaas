@@ -2,15 +2,8 @@ from iaas import db, app
 from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer, BadSignature, SignatureExpired
 from flask_login import current_user
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 
-
-id_column_name = "id"
-
-def id_column():
-    import uuid
-    return db.Column(id_column_name, UUID(), primary_key=True, default=uuid.uuid4)
 
 class User(db.Model):
     __tablename__ = 'user'
