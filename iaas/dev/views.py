@@ -66,7 +66,7 @@ class IntegerListController(Resource):
 		integerList = [integer.json() for integer in integers]
 
 		return {
-			'integerList': integerList
+			'integer_list': integerList
 		}
 
 	def post(self):
@@ -130,18 +130,21 @@ def load_user_from_request(request):
 	return None
 
 
-@login_manager.token_loader
-def load_user_from_token(token):
-	# Decrypt token
-	data = Serializer.load(token)
-
-	# Find the user
-	user = models.User.get(data['user_id'])
-
-	# Check password and return user or None
-	if user and data['password_hash'] == user.password_hash:
-		return user
-	return None
+# TODO: User token for loading user instead of user id
+# @login_manager.token_loader
+# def load_user_from_token(token):
+# 	serializer = Serializer(app.secret_key, expires_in=None)
+#
+# 	# Decrypt token
+# 	data = serializer.load(token)
+#
+# 	# Find the user
+# 	user = models.User.get(data['user_id'])
+#
+# 	# Check password and return user or None
+# 	if user and data['password_hash'] == user.password_hash:
+# 		return user
+# 	return None
 
 
 dev.add_resource(IntegerController, '/integers/<int_id>')

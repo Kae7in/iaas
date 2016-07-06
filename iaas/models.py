@@ -9,14 +9,16 @@ class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column('id', db.Text(length=36), default=lambda: str(uuid.uuid4()), primary_key=True)
-    username = db.Column(db.String(32), index = True)
+    username = db.Column(db.String(32), index = True, unique=True)
+    email = db.Column(db.String(120), unique=True)
     password_hash = db.Column(db.String(128))
     integers = db.relationship('Integer', backref='user', lazy='dynamic')
     authenticated = db.Column(db.Boolean, default=False)
     api_key = db.Column(db.String(310))
 
-    def __init__(self, username=None, password=None, integers=[]):
+    def __init__(self, username=None, email=None, password=None, integers=[]):
         self.username = username
+        self.email = email
         self.set_password(password)
         self.integers = integers
 

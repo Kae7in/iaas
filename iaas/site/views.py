@@ -4,7 +4,7 @@ from iaas import models, db, login_manager
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf import Form
 from wtforms import StringField
-from wtforms.validators import DataRequired
+from wtforms.validators import DataRequired, Email
 
 
 class LoginForm(Form):
@@ -14,6 +14,7 @@ class LoginForm(Form):
 
 class JoinForm(Form):
 	username = StringField('username', validators=[DataRequired()])
+	email = StringField('email', validators=[Email(), DataRequired()])
 	password = StringField('password', validators=[DataRequired()])
 	password_confirm = StringField('password_confirm', validators=[DataRequired()])
 
@@ -64,17 +65,27 @@ def join():
 	form = JoinForm(csrf_enabled=False)
 	if form.validate_on_submit():
 		username = request.form['username']
+		email = request.form['email']
 		password = request.form['password']
 		password_confirm = request.form['password_confirm']
 
-		if username is None or password is None or password_confirm is None:
-			return render_template('join.html')
+		# TODO: May not need this
+		if username is None\
+				or email is None\
+				or password is None\
+				or password_confirm is None:
+			return render_template('join.html')  # TODO: Add proper response
 
 		if password != password_confirm:
-			return render_template('join.html')
+			return render_template('join.html')  # TODO: Add proper response
+
+		# Check for prior existence of username and email
+		if db.session.query(db.exists().where(models.User.username == username)).scalar() is None\
+				or db.session.query(db.exists().where(models.User.email == email)).scalar() is None:
+			return render_template('join.html')  # TODO: Add proper response
 
 		# Create new user object
-		new_user = models.User(username=username, password=password)
+		new_user = models.User(username=username, email=email, password=password)
 
 		# Login user and commit to database before redirecting (order is important here)
 		new_user.authenticated = True
