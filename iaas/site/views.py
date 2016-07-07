@@ -105,6 +105,15 @@ def home():
 	return render_template('index.html')
 
 
+# @site_blueprint.route('/dashboard')
+# @login_required
+# def dashboard():
+# 	return render_template('dashboard.html')
+#
+#
+# @site_blueprint.route('/dashboard/new_integer')
+
+
 @login_manager.user_loader
 def load_user(user_id):
 	try:

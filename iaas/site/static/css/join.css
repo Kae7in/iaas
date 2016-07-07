@@ -1,0 +1,69 @@
+.fullWidth {
+   width: 100%;
+   margin-left: auto;
+   margin-right: auto;
+   max-width: initial;
+}
+
+
+
+#joinLayout {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+
+
+#form {
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    background-color: #e7e7e7;
+    border-radius: .3em;
+}
+
+#form .title {
+    color: #707070;
+}
+
+#form input {
+    border-radius: 0;
+}
+
+#form .inputTitle {
+    color: #707070;
+}
+
+#form .button {
+    width: 100%;
+    background-color: #3adb76;
+}
+
+#form .button:hover {
+    background-color: #3aab76;
+}
+
+#form .button:focus {
+    background-color: #3aab76;
+}
+
+#form h2 {
+    text-align: center;
+}
+
+
+
+.banner {
+    height: 100%;
+    text-align: center;
+}
+
+.banner .row {
+    height: 100%;
+}
+
+.banner .bannerText {
+    color: #3adb76;
+}
