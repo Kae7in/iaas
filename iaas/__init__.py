@@ -7,6 +7,7 @@ import os
 # Configure app
 app = Flask(__name__)
 app.config['SERVER_NAME']='iaas.com:5000'
+app.config['PROPAGATE_EXCEPTIONS'] = True
 
 
 # Database configuration

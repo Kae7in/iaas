@@ -9,6 +9,8 @@ from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 parser = reqparse.RequestParser()
 parser.add_argument('value', type=int)
 parser.add_argument('label')
+parser.add_argument('newValue', type=int)
+parser.add_argument('newLabel')
 
 
 class IntegerController(Resource):
@@ -38,15 +40,16 @@ class IntegerController(Resource):
 		integer = models.Integer.query.filter(models.Integer.user_id == current_user.id)\
 									.filter(models.Integer.id == int_id).first()
 
+		if integer is None:
+			abort(404, message="Integer {} does not exist.".format(int_id))
+
 		if integer is not None and args['value'] is not None:
 			integer.value = args['value']
-			db.session.commit()
-		elif integer is not None:
-			abort(404, message='Invalid parameters or key name - please use value=int')
-		elif args['value'] is not None:
-			abort(404, message="Integer {} does not exist.".format(int_id))
-		else:
-			abort(404, message='You should never get this error response, else Python is broken.')
+
+		if integer is not None and args['label'] is not None:
+			integer.label = args['label']
+
+		db.session.commit()
 
 		return integer.json(), 201
 
@@ -56,12 +59,15 @@ class IntegerListController(Resource):
 	def get(self):
 		args = parser.parse_args()
 		label = args['label']
+		value = args['value']
+
+		integers = models.Integer.query.filter(models.Integer.user_id == current_user.id)
 
 		if label is not None:
-			integers = models.Integer.query.filter(models.Integer.user_id == current_user.id)\
-											.filter(models.Integer.label == label)
-		else:
-			integers = models.Integer.query.filter(models.Integer.user_id == current_user.id)
+			integers = integers.filter(models.Integer.label == label)
+
+		if value is not None:
+			integers = integers.filter(models.Integer.value == value)
 
 		integerList = [integer.json() for integer in integers]
 
@@ -79,6 +85,68 @@ class IntegerListController(Resource):
 
 		return new_integer.json()
 
+	def delete(self):
+		args = parser.parse_args()
+		label = args['label']
+		value = args['value']
+
+		integers = models.Integer.query.filter(models.Integer.user_id == current_user.id)
+
+		if label is not None:
+			integers = integers.filter(models.Integer.label == label)
+
+		if value is not None:
+			integers = integers.filter(models.Integer.value == value)
+
+		integers.delete()
+
+		db.session.commit()
+
+		integerList = [integer.json() for integer in integers]
+
+		return {
+			'deleted_integers': integerList
+		}
+
+		return '', 204
+
+	def put(self):
+		args = parser.parse_args()
+		label = args['label']
+		value = args['value']
+
+		newLabel = args['newLabel']
+		newValue = args['newValue']
+
+		if newLabel is None and newValue is None:
+			return {
+				'updated_integers': []
+			}
+
+		integers = models.Integer.query.filter(models.Integer.user_id == current_user.id)
+
+		if label is not None:
+			integers = integers.filter(models.Integer.label == label)
+
+		if value is not None:
+			integers = integers.filter(models.Integer.value == value)
+
+		updatedIntegers = []
+		for integer in integers:
+			if newValue:
+				integer.value = newValue
+
+			if newLabel:
+				integer.label = newLabel
+
+			updatedIntegers.append(integer.json())
+
+		db.session.commit()
+
+		return {
+			'updated_integers': updatedIntegers
+		}
+
 
 @dev_blueprint.route('/')
 def dev_home():
@@ -86,9 +154,9 @@ def dev_home():
 
 
 # GET API KEY
-@dev_blueprint.route('/api_key')
+@dev_blueprint.route('/new_api_key')
 @login_required
-def get_api_key():
+def new_api_key():
 	# Generate token unique to current user
 	token = current_user.get_auth_token()
 
@@ -100,7 +168,21 @@ def get_api_key():
 	db.session.commit()
 
 	return jsonify({
-		'key': current_user.api_key.decode('ascii')
+		'api_key': current_user.api_key.decode('ascii')
+	})
+
+
+@dev_blueprint.route('/current_api_key')
+@login_required
+def current_api_key():
+	if current_user.api_key is None:
+		current_user.api_key = current_user.get_auth_token()
+
+		db.session.add(current_user)
+		db.session.commit()
+
+	return jsonify({
+		'api_key': current_user.api_key.decode('ascii')
 	})
 
 
@@ -118,7 +200,7 @@ def load_user_from_request(request):
 	# Next, try to login using Basic Auth
 	api_key = request.headers.get('Authorization')
 	if api_key:
-		api_key = api_key.replace('Basic ', '', 1)
+		api_key = api_key.replace('Token ', '', 1)
 		try:
 			api_key = unicode(api_key)
 		except TypeError:

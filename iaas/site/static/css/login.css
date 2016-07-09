@@ -16,12 +16,24 @@
 
 
 #form {
-    padding-left: 4em;
-    padding-right: 4em;
+    padding-left: 2em;
+    padding-right: 2em;
+    padding-top: 2em;
+    padding-bottom: 2em;
+    background-color: #efefef;
+    border-radius: 0;
+}
+
+#form .title {
+    color: #707070;
 }
 
 #form input {
     border-radius: 0;
+}
+
+#form .inputTitle {
+    color: #707070;
 }
 
 #form .button {
@@ -30,11 +42,11 @@
 }
 
 #form .button:hover {
-    background-color: #2169e8;
+    background-color: #777;
 }
 
 #form .button:focus {
-    background-color: #2169e8;
+    background-color: #777;
 }
 
 #form h2 {
@@ -43,16 +55,15 @@
 
 
 
-#sideBanner {
-    background-color: #2199e8;
+.banner {
     height: 100%;
     text-align: center;
 }
 
-#sideBanner .row {
+.banner .row {
     height: 100%;
 }
 
-#sideBanner .bannerText {
-    color: white;
+.banner .bannerText {
+    color: #2199e8;
 }

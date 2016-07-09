@@ -40,8 +40,10 @@ class User(db.Model):
     def verify_password(self, password_or_token):
         return pwd_context.verify(password_or_token, self.password_hash)
 
+    # TODO: Enable ability for user to get fresh token without having to change password
+    # TODO: Allow user to set an expiration
     def get_auth_token(self, expiration = 600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        s = Serializer(app.config['SECRET_KEY']) #, expiration=expiration)
         return s.dumps({
             'id': str(self.id),
             'password_hash': self.password_hash

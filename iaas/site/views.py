@@ -1,6 +1,7 @@
-from flask import render_template, request, abort, redirect, url_for
+from flask import render_template, request, abort, redirect, url_for, jsonify
 from . import site_blueprint
 from iaas import models, db, login_manager
+from iaas.dev import views as dev
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf import Form
 from wtforms import StringField
@@ -22,6 +23,11 @@ class JoinForm(Form):
 @site_blueprint.route('/login', methods = ['GET', 'POST'])
 def login():
 	form = LoginForm(csrf_enabled=False)
+	next_url = request.args.get('next')
+
+	if current_user.is_authenticated:
+		return redirect(next_url or url_for('site.home'))
+
 	if form.validate_on_submit():
 		# Get fields from form submission
 		username = request.form['username']
@@ -43,7 +49,7 @@ def login():
 
 			# Redirect
 			next_url = request.args.get('next')
-			return redirect(next_url or url_for('site.home'))
+			return redirect(next_url or url_for('site.dashboard'))
 
 	return render_template('login.html')
 
@@ -63,6 +69,11 @@ def logout():
 @site_blueprint.route('/join', methods = ['GET', 'POST'])
 def join():
 	form = JoinForm(csrf_enabled=False)
+	next_url = request.args.get('next')
+
+	if current_user.is_authenticated:
+		return redirect(next_url or url_for('site.home'))
+
 	if form.validate_on_submit():
 		username = request.form['username']
 		email = request.form['email']
@@ -93,9 +104,7 @@ def join():
 		db.session.commit()
 		login_user(new_user, remember=True)
 
-		next_url = request.args.get('next')
-
-		return redirect(next_url or url_for('site.home'))
+		return redirect(next_url or url_for('site.dashboard'))
 
 	return render_template('join.html')
 
@@ -105,12 +114,29 @@ def home():
 	return render_template('index.html')
 
 
-# @site_blueprint.route('/dashboard')
-# @login_required
-# def dashboard():
-# 	return render_template('dashboard.html')
-#
-#
+@site_blueprint.route('/dashboard')
+@login_required
+def dashboard():
+	return render_template('dashboard.html')
+
+
+@site_blueprint.route('/docs')
+def docs():
+	return render_template('docs.html')
+
+
+@site_blueprint.route('/new_api_key')
+@login_required
+def new_api_key():
+	return dev.new_api_key()
+
+
+@site_blueprint.route('/current_api_key')
+@login_required
+def current_api_key():
+	return dev.current_api_key()
+
+
 # @site_blueprint.route('/dashboard/new_integer')
 
 

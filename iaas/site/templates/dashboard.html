@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+
+<title>Dashboard</title>
+
+<link rel="stylesheet" href="{{ url_for('site.static', filename='css/dashboard.css') }}">
+
+{% endblock %}
+
+
+{% block body %}
+{{ super() }}
+
+<div class="row align-middle standardDiv">
+    <div class="column large-12 align-self-center">
+        <h2 class="mainTitle titleText"><span class="blueText">&#x2124;</span> API Key</h2>
+    </div>
+
+    <div class="column large-12 align-self-center">
+        <div id="keyButton" class="button blueBG" data-newapikey="{{ url_for('site.new_api_key') }}">Get New Key</div>
+        <div id="keyContainer">
+            <p data-currentapikey="{{ url_for('site.current_api_key') }}"></p>
+        </div>
+
+        <p class="bodyText">
+            <span class="blueText">WARNING:</span> Do NOT give out your API key. It provides access to all of your private integers.<br>
+        </p>
+        <p class="bodyText">
+            <span class="blueText">NOTE:</span> Resetting your password will change your API key. This is useful if you think someone else has gained access to your current key.
+        </p>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        var currentApiKeyURL = $("#keyContainer p").data("currentapikey");
+
+        $.get(currentApiKeyURL, function(data, status){
+            $("#keyContainer p").html(data.api_key);
+        });
+    });
+
+    $("#keyButton").click(function() {
+        var newApiKeyURL = $("#keyButton").data("newapikey");
+
+        $.get(newApiKeyURL, function(data, status){
+            $("#keyContainer p").html(data.api_key);
+        });
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,42 @@
+.integerJSON {
+    padding-left: 2em;
+    color: #2199e8;
+}
+
+.requestGET {
+    font-family: courier, sans-serif;
+    background-color: #777;
+    color: white;
+    padding: 4px;
+}
+
+.requestPOST {
+    font-family: courier, sans-serif;
+    background-color: #2199e8;
+    color: white;
+    padding: 4px;
+}
+
+.requestPUT {
+    font-family: courier, sans-serif;
+    background-color: white;
+    color: #2199e8;
+    outline-style: solid;
+    outline-width: 1px;
+    outline-color: #2199e8;
+    padding: 4px;
+}
+
+.requestDELETE {
+    font-family: courier, sans-serif;
+    background-color: red;
+    color: white;
+    padding: 4px;
+}
+
+.code {
+    padding: 4px;
+    font-family: courier, sans-serif;
+    background-color: #eee;
+    color: #444;
+}

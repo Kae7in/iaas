@@ -14,14 +14,8 @@
 {{ super() }}
 
 <div id="joinLayout" class="row fullWidth align-middle">
-    <div class="column large-4 banner">
-        <div class="row align-middle">
-            <div class="column large-12">
-                <h1 class="bannerText">{11, 23, ...</h1>
-            </div>
-        </div>
-    </div>
-    <div id="form" class="column large-4">
+
+    <div id="form" class="column large-5">
         <h2 class="title">Join</h2>
         <form method="POST" action="/join">
             <h6 class="inputTitle">Username:</h6>
@@ -34,15 +28,17 @@
             <input type="password" name="password_confirm"><br>
             <input class="button" type="submit" value="Submit">
         </form>
+        <a href="{{ url_for('site.login') }}" class="button alternateButton">Login</a>
     </div>
 
-    <div class="column large-4 banner">
+    <div id="sideBanner" class="column large-7">
         <div class="row align-middle">
             <div class="column large-12">
-                <h1 class="bannerText">... , 19, 17}</h1>
+                <h1 class="bannerText">Your &#x2124;,<br>in the cloud</h1>
             </div>
         </div>
     </div>
+
 </div>
 
 {% endblock %}

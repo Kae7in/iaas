@@ -1,4 +1,5 @@
 from flask import Blueprint
+from iaas import dev_blueprint
 import flask_restful
 
 

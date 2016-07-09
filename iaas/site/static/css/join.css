@@ -16,12 +16,8 @@
 
 
 #form {
-    padding-left: 2em;
-    padding-right: 2em;
-    padding-top: 2em;
-    padding-bottom: 2em;
-    background-color: #e7e7e7;
-    border-radius: .3em;
+    padding-left: 4em;
+    padding-right: 4em;
 }
 
 #form .title {
@@ -38,15 +34,15 @@
 
 #form .button {
     width: 100%;
-    background-color: #3adb76;
+    background-color: #2199e8;
 }
 
 #form .button:hover {
-    background-color: #3aab76;
+    background-color: #777;
 }
 
 #form .button:focus {
-    background-color: #3aab76;
+    background-color: #777;
 }
 
 #form h2 {
@@ -55,15 +51,16 @@
 
 
 
-.banner {
+#sideBanner {
+    background-color: #2199e8;
     height: 100%;
     text-align: center;
 }
 
-.banner .row {
+#sideBanner .row {
     height: 100%;
 }
 
-.banner .bannerText {
-    color: #3adb76;
+#sideBanner .bannerText {
+    color: white;
 }

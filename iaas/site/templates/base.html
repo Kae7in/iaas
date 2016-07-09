@@ -6,12 +6,45 @@
         <link rel="stylesheet" href="{{ url_for('site.static', filename='foundation-6.2.3-custom/css/foundation.css') }}">
         <script src="{{ url_for('site.static', filename='foundation-6.2.3-custom/js/vendor/jquery.js') }}"></script>
         <script src="{{ url_for('site.static', filename='foundation-6.2.3-custom/js/vendor/foundation.min.js') }}"></script>
+        <link rel="stylesheet" href="{{ url_for('site.static', filename='css/base.css') }}">
         {% endblock %}
     </head>
 
     <body>
         {% block body %}
 
+        <div data-sticky-container>
+            <div class="top-bar sticky" data-sticky data-options="marginTop:0;" style="width:100%">
+                <div class="top-bar-left">
+                    <div class="leftBarContentContainer">
+                        <ul class="menu">
+                            <li class="menu-text">Int<span class="blueText">&#x2124;</span>.io</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="top-bar-right">
+                    <div class="rightBarContentContainer">
+                        <ul class="menu">
+                            <li><a href="{{ url_for('site.docs') }}" class="button blueBG blueOutline">Docs</a></li>
+                            {% if current_user.is_authenticated %}
+                            <li><a href="{{ url_for('site.dashboard') }}" class="button blueBG blueOutline">Dashboard</a></li>
+                            <li><a href="{{ url_for('site.logout') }}" class="button blueBG blueOutline">Logout</a></li>
+                            {% else %}
+                            <li><a href="{{ url_for('site.join') }}" class="button blueBG blueOutline">Join</a></li>
+                            <li><a href="{{ url_for('site.login') }}" class="button blueBG blueOutline">Login</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         {% endblock %}
+
+        <script>
+          $(document).foundation();
+        </script>
+
     </body>
 </html>

@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block head %}
+{{ super() }}
+
+<title>Docs</title>
+
+<link rel="stylesheet" href="{{ url_for('site.static', filename='css/docs.css') }}">
+
+{% endblock %}
+
+
+{% block body %}
+{{ super() }}
+
+    <div class="row align-middle standardDiv">
+        <div class="column large-12 align-self-center">
+            <h2 class="mainTitle titleText"><span class="blueText">&#x2124;</span> Using Intz.io</h2>
+        </div>
+
+        <div class="column large-12 align-self-center">
+            <p class="bodyText">
+                Intz.io implements a simple RESTful API designed to easily allow you to store and retrieve your integers. Integers have the following format:<br>
+                {<br>
+                    <span class="integerJSON">id: "77671624-9dfa-37d3-b459-abf9eae34317"</span>,<br>
+                    <span class="integerJSON">label: "my_integer"</span>,<br>
+                    <span class="integerJSON">value: 700<br></span>
+                }
+            </p>
+
+            <p class="bodyText">You can query integers by <span class="blueText">id</span>, <span class="blueText">label</span>, <span class="blueText">value</span>, or any combination therein. Consuming the Int.z API using cURL is simple:</p>
+        </div>
+    </div>
+
+    <div class="row align-middle standardDiv">
+        <div class="column large-12 align-self-center">
+            <p class="bodyText">
+                <span class="requestGET">GET</span> a list all of your integers<br>
+                <span class="code">curl -H http://dev.intz.io/integers "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestGET">GET</span> an integer by <span class="blueText">id</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers/<span class="blueText">id</span> "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestGET">GET</span> a list of integers by <span class="blueText">value</span> and/or <span class="blueText">label</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers -X GET -d "<span class="blueText">value</span>=700" -d "<span class="blueText">label</span>=my_integer" "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestPOST">POST</span> an integer with a <span class="blueText">value</span> and/or <span class="blueText">label</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers -X POST -d "<span class="blueText">value</span>=700" -d "<span class="blueText">label</span>=my_integer" "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestPUT">PUT</span> to update an integer by <span class="blueText">id</span> with a new <span class="blueText">value</span> and/or <span class="blueText">label</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers/<span class="blueText">id</span> -X PUT -d "<span class="blueText">value</span>=700" -d "<span class="blueText">label</span>=my_integer" "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestPUT">PUT</span> to update a list of integers filtered by <span class="blueText">value</span> and/or <span class="blueText">label</span> with <span class="blueText">newValue</span> and/or <span class="blueText">newLabel</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers -X PUT -d "<span class="blueText">value</span>=700" -d "<span class="blueText">label</span>=my_integer" <span class="blueText">newValue</span>=1000" -d "<span class="blueText">newLabel</span>=her_integer "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestDELETE">DELETE</span> an integer by <span class="blueText">id</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers/<span class="blueText">id</span> -X DELETE "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+            <p class="bodyText">
+                <span class="requestDELETE">DELETE</span> a list of integers by <span class="blueText">value</span> and/or <span class="blueText">label</span><br>
+                <span class="code">curl -H http://dev.intz.io/integers -X DELETE <span class="blueText">value</span>=700" -d "<span class="blueText">label</span>=my_integer" "Authorization: Token AUTH_TOKEN"</span>
+            </p>
+        </div>
+    </div>
+
+{% endblock %}
