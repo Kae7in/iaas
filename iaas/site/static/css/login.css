@@ -39,6 +39,7 @@
 #form .button {
     width: 100%;
     background-color: #2199e8;
+    border-radius: 0px;
 }
 
 #form .button:hover {

@@ -23,7 +23,7 @@ class JoinForm(Form):
 
 class NewIntegerForm(Form):
 	integer = IntegerField('value', validators=[DataRequired()])
-	label = StringField('label')
+	label = StringField('label', validators=[DataRequired()])
 
 
 @site_blueprint.route('/login', methods = ['GET', 'POST'])
@@ -128,7 +128,8 @@ def home():
 @site_blueprint.route('/dashboard')
 @login_required
 def dashboard():
-	return render_template('dashboard.html')
+	form = NewIntegerForm(csrf_enabled=False)
+	return render_template('dashboard.html', form=form)
 
 
 @site_blueprint.route('/dashboard/get_all_integers', methods=['GET'])
@@ -140,6 +141,52 @@ def get_all_integers():
 	return jsonify({
 		'data': r.json()
 	})
+
+
+@site_blueprint.route('/dashboard/new_integer', methods=['POST'])
+@login_required
+def new_integer():
+	next_url = request.args.get('next')
+
+	# form = NewIntegerForm(csrf_enabled=False)
+
+	# if form.validate_on_submit():  # TODO: Get this to freaking work
+	value = request.form['value']
+	label = request.form['label']
+
+	if value is not None:
+		try:
+			int(value)
+		except ValueError:
+			redirect(url_for('site.dashboard'))
+	else:
+		return redirect(url_for('site.dashboard'))
+
+	data = {
+		'value': value,
+		'label': label
+	}
+
+	requests.post(url_for('dev.integerlistcontroller'),
+					 headers={'Authorization': 'Token ' + current_user.api_key},
+					 data=data)
+
+	return redirect(next_url or url_for('site.dashboard'))
+
+
+@site_blueprint.route('/dashboard/delete_integer/<string:int_id>', methods=['POST', 'DELETE'])
+@login_required
+def delete_integer(int_id):
+	next_url = request.args.get('next')
+
+	if int_id is None:
+		return redirect(url_for('site.dashboard'))
+
+	requests.delete(url_for('dev.integercontroller', int_id=str(int_id)),
+					 headers={'Authorization': 'Token ' + current_user.api_key})
+
+	return '', 204
+
 
 
 @site_blueprint.route('/docs')

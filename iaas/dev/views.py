@@ -92,6 +92,9 @@ class IntegerListController(Resource):
 
 		integers = models.Integer.query.filter(models.Integer.user_id == current_user.id)
 
+		if label is None and value is None:
+			return '', 204
+
 		if label is not None:
 			integers = integers.filter(models.Integer.label == label)
 
@@ -108,7 +111,6 @@ class IntegerListController(Resource):
 			'deleted_integers': integerList
 		})
 
-		return '', 204
 
 	def put(self):
 		args = parser.parse_args()

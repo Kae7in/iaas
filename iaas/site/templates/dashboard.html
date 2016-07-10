@@ -19,7 +19,7 @@
     </div>
 
     <div class="column large-12 align-self-center">
-        <div id="newIntegerButton" class="button blueOutline fadeToBlue" data-newinteger="{{ url_for('site.get_all_integers') }}">New Integer</div>
+        <div id="newIntegerButton" class="button blueOutline fadeToBlue" data-newinteger="{{ url_for('site.new_integer') }}">New Integer</div>
         <div id="integerContainer" data-getintegersurl="{{ url_for('site.get_all_integers') }}">
             <table border="1">
 
@@ -48,6 +48,26 @@
     </div>
 </div>
 
+<a href="#" data-reveal-id="myModal">Click Me For A Modal</a>
+
+<div class="reveal" id="newIntegerModal" data-reveal>
+    <h3>New Integer</h3>
+    <p class="lead greyText">Provide a label and value for your new integer:</p>
+
+    <form method="POST" action="{{ url_for('site.new_integer') }}">
+        {{ form.csrf_token }}
+        <h6 class="greyText">Label:</h6>
+        <input type="text" name="label"><br>
+        <h6 class="greyText">Value:</h6>
+        <input type="number" name="value"><br>
+        <input class="button blueOutline fadeToBlue" type="submit" value="Create">
+    </form>
+
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
 <script>
     function displayIntegers(data) {
         integerList = data.integer_list;
@@ -63,8 +83,8 @@
             htmlToInsert += "<tr class=\"rowFormat\">\
                 <td>" + integer.label + "</td>\
                 <td>" + integer.value + "</td>\
-                <td>" + integer.id + "</td>\
-              </tr>"
+                <td id=" + integer.id + ">" + integer.id + "<a class=\"editButton button redOutline fadeToRed\" data-deleteintegerurl=\"{{ url_for('site.delete_integer', int_id=placeholder) }}\" onclick=\"deleteInteger(this);\">Delete</a></td>\
+              </tr>";
         }
 
         $("#integerContainer table").html(htmlToInsert);
@@ -106,12 +126,30 @@
     });
 
     $("#newIntegerButton").click(function() {
-        var newIntegerURL = $("#newIntegerButton").data("newinteger");
-
-        $.get(newIntegerURL, function(data, status){
-            console.log(data.data);
-        });
+        var popup = new Foundation.Reveal($('#newIntegerModal'));
+        popup.open();
     });
+
+    function deleteInteger(deleteButton) {
+        var deleteIntegerURL = $(deleteButton).data("deleteintegerurl") + deleteButton.parentNode.id;
+
+        $.delete(deleteIntegerURL, function(data, status){
+            rowToDelete = deleteButton.parentNode.parentNode;
+            rowToDelete.parentNode.removeChild(rowToDelete);
+        });
+    }
+
+
+    $.delete = function(url, callback){
+        $.ajax({
+            url: url,
+            type: 'DELETE',
+            data: {},
+            contentType:'application/json',
+            dataType: 'text',
+            success: callback
+        });
+    }
 </script>
 
 {% endblock %}
