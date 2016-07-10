@@ -4,8 +4,9 @@ from iaas import models, db, login_manager
 from iaas.dev import views as dev
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf import Form
-from wtforms import StringField
+from wtforms import StringField, IntegerField
 from wtforms.validators import DataRequired, Email
+import requests
 
 
 class LoginForm(Form):
@@ -20,13 +21,18 @@ class JoinForm(Form):
 	password_confirm = StringField('password_confirm', validators=[DataRequired()])
 
 
+class NewIntegerForm(Form):
+	integer = IntegerField('value', validators=[DataRequired()])
+	label = StringField('label')
+
+
 @site_blueprint.route('/login', methods = ['GET', 'POST'])
 def login():
 	form = LoginForm(csrf_enabled=False)
 	next_url = request.args.get('next')
 
 	if current_user.is_authenticated:
-		return redirect(next_url or url_for('site.home'))
+		return redirect(next_url or url_for('site.dashboard'))
 
 	if form.validate_on_submit():
 		# Get fields from form submission
@@ -72,7 +78,7 @@ def join():
 	next_url = request.args.get('next')
 
 	if current_user.is_authenticated:
-		return redirect(next_url or url_for('site.home'))
+		return redirect(next_url or url_for('site.dashboard'))
 
 	if form.validate_on_submit():
 		username = request.form['username']
@@ -91,8 +97,8 @@ def join():
 			return render_template('join.html')  # TODO: Add proper response
 
 		# Check for prior existence of username and email
-		if db.session.query(db.exists().where(models.User.username == username)).scalar() is None\
-				or db.session.query(db.exists().where(models.User.email == email)).scalar() is None:
+		if db.session.query(db.exists().where(models.User.username == username)).scalar()\
+				or db.session.query(db.exists().where(models.User.email == email)).scalar():
 			return render_template('join.html')  # TODO: Add proper response
 
 		# Create new user object
@@ -111,13 +117,29 @@ def join():
 
 @site_blueprint.route('/')
 def home():
-	return render_template('index.html')
+	next_url = request.args.get('next')
+
+	if current_user.is_authenticated:
+		return redirect(next_url or url_for('site.dashboard'))
+	else:
+		return render_template('index.html')
 
 
 @site_blueprint.route('/dashboard')
 @login_required
 def dashboard():
 	return render_template('dashboard.html')
+
+
+@site_blueprint.route('/dashboard/get_all_integers', methods=['GET'])
+@login_required
+def get_all_integers():
+	r = requests.get(url_for('dev.integerlistcontroller'),
+					 headers={'Authorization': 'Token ' + current_user.api_key})
+
+	return jsonify({
+		'data': r.json()
+	})
 
 
 @site_blueprint.route('/docs')
@@ -136,8 +158,6 @@ def new_api_key():
 def current_api_key():
 	return dev.current_api_key()
 
-
-# @site_blueprint.route('/dashboard/new_integer')
 
 
 @login_manager.user_loader

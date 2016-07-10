@@ -46,36 +46,70 @@
     text-align: justify;
 }
 
-.blueBG {
-    background-color: #2199e8;
-    border-radius: 0;
-}
-
-.blueBG:hover {
-    background-color: #777;
-}
-
-.blueBG:focus {
-    background-color: #777;
-}
-
 .blueText {
     color: #2199e8;
 }
 
 .blueOutline {
-    background-color: white;
-    outline-style: solid;
-    outline-color: #2199e8;
-    outline-radius: 0px;
-    outline-width: 1px;
+    background: rgba(0,0,0,0);
+
+    border-style: solid;
+    border-color: #2199e8;
+    border-radius: 0px;
+    border-width: 1px;
+
+    border-radius: 0px;
+
     color: #2199e8;
+
+    margin-left: 0px;
 }
 
-.blueOutline:hover {
-    outline-color: #777;
+.noLeftBorder {
+    border-left-width: 0px;
 }
 
-.blueOutline:focus {
-    outline-color: #777;
+.noRightBorder {
+    border-right-width: 0px;
+}
+
+.noLeftRightBorder {
+    border-left-width: 0px;
+    border-right-width: 0px;
+}
+
+.fadeToGrey:hover {
+    outline-radius: 0;
+
+    border-color: white;
+    border-radius: 0;
+
+    background-color: #777;
+}
+
+.fadeToGrey:focus {
+    outline-radius: 0;
+
+    border-color: white;
+    border-radius: 0;
+
+    background-color: #777;
+}
+
+.fadeToBlue:hover {
+    background-color: #2199e8;
+    outline-color: #2199e8;
+    outline-radius: 0;
+    border-radius: 0;
+    border-color: white;
+    outline-color: white;
+}
+
+.fadeToBlue:focus {
+    background-color: #2199e8;
+    outline-color: #2199e8;
+    outline-radius: 0;
+    border-radius: 0;
+    border-color: white;
+    outline-color: white;
 }

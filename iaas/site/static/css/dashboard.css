@@ -1,5 +1,26 @@
+table tbody tr:nth-child(odd) {background-color: white;}
+table tbody tr:nth-child(even) {background-color: #e8f4fd;}
+
+#integerContainer {
+    max-height: 270rem;
+    overflow-y: scroll;
+}
+
+.rowFormat {
+    padding: 1rem;
+    margin-bottom: 2rem;
+    overflow: auto;
+    text-overflow: ellipsis;
+
+    border-style: solid;
+    border-width: 1px;
+    border-color: #2199e8;
+}
+
+
+
 #keyContainer {
-    padding: 2em;
+    padding: 2rem;
     overflow: auto;
     text-overflow: ellipsis;
 

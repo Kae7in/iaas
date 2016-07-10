@@ -15,11 +15,26 @@
 
 <div class="row align-middle standardDiv">
     <div class="column large-12 align-self-center">
+        <h2 class="mainTitle titleText"><span class="blueText">&#x2124;</span> Integers</h2>
+    </div>
+
+    <div class="column large-12 align-self-center">
+        <div id="newIntegerButton" class="button blueOutline fadeToBlue" data-newinteger="{{ url_for('site.get_all_integers') }}">New Integer</div>
+        <div id="integerContainer" data-getintegersurl="{{ url_for('site.get_all_integers') }}">
+            <table border="1">
+
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row align-middle standardDiv">
+    <div class="column large-12 align-self-center">
         <h2 class="mainTitle titleText"><span class="blueText">&#x2124;</span> API Key</h2>
     </div>
 
     <div class="column large-12 align-self-center">
-        <div id="keyButton" class="button blueBG" data-newapikey="{{ url_for('site.new_api_key') }}">Get New Key</div>
+        <div id="keyButton" class="button blueOutline fadeToBlue" data-newapikey="{{ url_for('site.new_api_key') }}">Get New Key</div>
         <div id="keyContainer">
             <p data-currentapikey="{{ url_for('site.current_api_key') }}"></p>
         </div>
@@ -34,19 +49,67 @@
 </div>
 
 <script>
-    $(document).ready(function() {
+    function displayIntegers(data) {
+        integerList = data.integer_list;
+        htmlToInsert = "<tr>\
+                <th>Label</th>\
+                <th>Value</th>\
+                <th>ID</th>\
+              </tr>";
+
+        for (var i = 0; i < integerList.length; ++i) {
+            integer = integerList[i];
+
+            htmlToInsert += "<tr class=\"rowFormat\">\
+                <td>" + integer.label + "</td>\
+                <td>" + integer.value + "</td>\
+                <td>" + integer.id + "</td>\
+              </tr>"
+        }
+
+        $("#integerContainer table").html(htmlToInsert);
+    }
+
+    function getAllIntegers() {
+        // Display all of the user's integers
+        var integersURL = $("#integerContainer").data("getintegersurl");
+
+        $.get(integersURL, function(data, status){
+            displayIntegers(data.data);
+        });
+    }
+
+    function getCurrentAPIKey(callback) {
+        // Display user's current API key
         var currentApiKeyURL = $("#keyContainer p").data("currentapikey");
 
         $.get(currentApiKeyURL, function(data, status){
             $("#keyContainer p").html(data.api_key);
+            callback(data);
+        });
+    }
+
+    $(document).ready(function() {
+        getCurrentAPIKey(function(data){
+            getAllIntegers();  // This has to be in a callback in case it's a first time user and they don't have an API key, yet
         });
     });
+
+
 
     $("#keyButton").click(function() {
         var newApiKeyURL = $("#keyButton").data("newapikey");
 
         $.get(newApiKeyURL, function(data, status){
             $("#keyContainer p").html(data.api_key);
+        });
+    });
+
+    $("#newIntegerButton").click(function() {
+        var newIntegerURL = $("#newIntegerButton").data("newinteger");
+
+        $.get(newIntegerURL, function(data, status){
+            console.log(data.data);
         });
     });
 </script>

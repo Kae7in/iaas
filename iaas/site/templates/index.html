@@ -5,15 +5,36 @@
 
 <title>Home</title>
 
+<link rel="stylesheet" href="{{ url_for('site.static', filename='css/index.css') }}">
+
 {% endblock %}
 
 
 {% block body %}
 
-    {% if current_user.is_authenticated %}
-        Hi {{ current_user.username }}!
-    {% else %}
-        Hello, and welcome to IAAS!
-    {% endif %}
+    <!--{% if current_user.is_authenticated %}-->
+        <!--Hi {{ current_user.username }}!-->
+    <!--{% else %}-->
+        <!--Hello, and welcome to IAAS!-->
+    <!--{% endif %}-->
+
+    <section class="hero">
+        <div class="row intro">
+            <div class="small-centered medium-uncentered medium-6 large-7 columns">
+              <h1>Too many integers?</h1>
+              <p>IntZ.io is your one stop storage solution for all (&forall;) of your integers (&#x2124;).</p>
+            </div>
+            <div class="small-centered medium-uncentered medium-6 large-5 columns">
+              <div class="logo">&#x2124;</div>
+            </div>
+            <div class="small-centered medium-uncentered medium-12 large-12 columns">
+                <div class="buttonWrapper">
+                    <a href="{{ url_for('site.login') }}" class="button whiteOutline fadeToBlue">Login</a>
+                    <a href="{{ url_for('site.join') }}" class="button whiteOutline fadeToBlue">Join</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
 
 {% endblock %}

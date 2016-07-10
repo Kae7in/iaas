@@ -18,7 +18,7 @@
                 <div class="top-bar-left">
                     <div class="leftBarContentContainer">
                         <ul class="menu">
-                            <li class="menu-text">Int<span class="blueText">&#x2124;</span>.io</li>
+                            <li><a href="{{ url_for('site.home') }}" class="menu-text">Int<span class="blueText">&#x2124;</span>.io</a></li>
                         </ul>
                     </div>
                 </div>
@@ -26,13 +26,13 @@
                 <div class="top-bar-right">
                     <div class="rightBarContentContainer">
                         <ul class="menu">
-                            <li><a href="{{ url_for('site.docs') }}" class="button blueBG blueOutline">Docs</a></li>
+                            <li><a href="{{ url_for('site.docs') }}" class="button blueOutline fadeToBlue noRightBorder">Docs</a></li>
                             {% if current_user.is_authenticated %}
-                            <li><a href="{{ url_for('site.dashboard') }}" class="button blueBG blueOutline">Dashboard</a></li>
-                            <li><a href="{{ url_for('site.logout') }}" class="button blueBG blueOutline">Logout</a></li>
+                            <li><a href="{{ url_for('site.dashboard') }}" class="button blueOutline fadeToBlue noLeftRightBorder">Dashboard</a></li>
+                            <li><a href="{{ url_for('site.logout') }}" class="button blueOutline fadeToBlue noLeftBorder">Logout</a></li>
                             {% else %}
-                            <li><a href="{{ url_for('site.join') }}" class="button blueBG blueOutline">Join</a></li>
-                            <li><a href="{{ url_for('site.login') }}" class="button blueBG blueOutline">Login</a></li>
+                            <li><a href="{{ url_for('site.join') }}" class="button blueOutline fadeToBlue noLeftRightBorder">Join</a></li>
+                            <li><a href="{{ url_for('site.login') }}" class="button blueOutline fadeToBlue noLeftBorder">Login</a></li>
                             {% endif %}
                         </ul>
                     </div>

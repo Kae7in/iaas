@@ -71,9 +71,9 @@ class IntegerListController(Resource):
 
 		integerList = [integer.json() for integer in integers]
 
-		return {
+		return jsonify({
 			'integer_list': integerList
-		}
+		})
 
 	def post(self):
 		args = parser.parse_args()
@@ -104,9 +104,9 @@ class IntegerListController(Resource):
 
 		integerList = [integer.json() for integer in integers]
 
-		return {
+		return jsonify({
 			'deleted_integers': integerList
-		}
+		})
 
 		return '', 204
 
@@ -143,9 +143,9 @@ class IntegerListController(Resource):
 
 		db.session.commit()
 
-		return {
+		return jsonify({
 			'updated_integers': updatedIntegers
-		}
+		})
 
 
 @dev_blueprint.route('/')
