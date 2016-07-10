@@ -6,7 +6,7 @@ import os
 
 # Configure app
 app = Flask(__name__)
-app.config['SERVER_NAME']='iaas.com:5000'
+app.config['SERVER_NAME']='intz.com:5000'
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 
@@ -23,9 +23,9 @@ login_manager.init_app(app)
 login_manager.login_view = 'site.login'
 
 
-from iaas.dev import dev_blueprint
-from iaas.site import site_blueprint
-import iaas.models
+from intz.dev import dev_blueprint
+from intz.site import site_blueprint
+import intz.models
 
 
 # Blueprint registration

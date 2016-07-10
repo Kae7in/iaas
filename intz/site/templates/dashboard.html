@@ -55,7 +55,6 @@
     <p class="lead greyText">Provide a label and value for your new integer:</p>
 
     <form method="POST" action="{{ url_for('site.new_integer') }}">
-        {{ form.csrf_token }}
         <h6 class="greyText">Label:</h6>
         <input type="text" name="label"><br>
         <h6 class="greyText">Value:</h6>
@@ -77,7 +76,7 @@
                 <th>ID</th>\
               </tr>";
 
-        for (var i = 0; i < integerList.length; ++i) {
+        for (var i = integerList.length - 1; i >= 0; --i) {
             integer = integerList[i];
 
             htmlToInsert += "<tr class=\"rowFormat\">\

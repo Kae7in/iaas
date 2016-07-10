@@ -1,7 +1,7 @@
 from flask import render_template, request, abort, redirect, url_for, jsonify
 from . import site_blueprint
-from iaas import models, db, login_manager
-from iaas.dev import views as dev
+from intz import models, db, login_manager
+from intz.dev import views as dev
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf import Form
 from wtforms import StringField, IntegerField
@@ -21,9 +21,9 @@ class JoinForm(Form):
 	password_confirm = StringField('password_confirm', validators=[DataRequired()])
 
 
-class NewIntegerForm(Form):
-	integer = IntegerField('value', validators=[DataRequired()])
-	label = StringField('label', validators=[DataRequired()])
+# class NewIntegerForm(Form):
+# 	integer = IntegerField('value', validators=[DataRequired()])
+# 	label = StringField('label', validators=[DataRequired()])
 
 
 @site_blueprint.route('/login', methods = ['GET', 'POST'])
@@ -93,7 +93,7 @@ def join():
 				or password_confirm is None:
 			return render_template('join.html')  # TODO: Add proper response
 
-		if password != password_confirm:
+		if password != password_confirm or len(password) < 8:
 			return render_template('join.html')  # TODO: Add proper response
 
 		# Check for prior existence of username and email
@@ -128,8 +128,8 @@ def home():
 @site_blueprint.route('/dashboard')
 @login_required
 def dashboard():
-	form = NewIntegerForm(csrf_enabled=False)
-	return render_template('dashboard.html', form=form)
+	# form = NewIntegerForm(csrf_enabled=False)
+	return render_template('dashboard.html')
 
 
 @site_blueprint.route('/dashboard/get_all_integers', methods=['GET'])

@@ -1,7 +1,7 @@
 from flask import jsonify
 from flask_restful import abort, reqparse, Resource
 from . import dev, dev_blueprint
-from iaas import models, db, login_manager
+from intz import models, db, login_manager
 from flask_login import login_required, current_user
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
@@ -152,7 +152,7 @@ class IntegerListController(Resource):
 
 @dev_blueprint.route('/')
 def dev_home():
-	return 'Welcome to the IAAS API!'
+	return 'Welcome to the IntZ API!'
 
 
 # GET API KEY
