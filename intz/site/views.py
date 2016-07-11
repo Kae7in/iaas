@@ -1,7 +1,6 @@
 from flask import render_template, request, abort, redirect, url_for, jsonify
 from . import site_blueprint
 from intz import models, db, login_manager
-from intz.dev import views as dev
 from flask_login import login_user, login_required, logout_user, current_user
 from flask_wtf import Form
 from wtforms import StringField, IntegerField
@@ -197,13 +196,19 @@ def docs():
 @site_blueprint.route('/new_api_key')
 @login_required
 def new_api_key():
-	return dev.new_api_key()
+	r = requests.get('0.0.0.0:7000',
+				 headers={'Authorization': 'Token ' + current_user.api_key})
+
+	return jsonify(r.json())
 
 
 @site_blueprint.route('/current_api_key')
 @login_required
 def current_api_key():
-	return dev.current_api_key()
+	r = requests.get(url_for('dev.current_api_key'),
+					 headers={'Authorization': 'Token ' + current_user.api_key})
+
+	return jsonify(r.json())
 
 
 

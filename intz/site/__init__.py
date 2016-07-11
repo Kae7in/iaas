@@ -1,5 +1,5 @@
 from flask import Blueprint
-from intz import dev_blueprint
+# from intz import dev_blueprint
 import flask_restful
 
 
@@ -11,8 +11,8 @@ site_blueprint = Blueprint('site',
 )
 
 
-dev = flask_restful.Api()
-dev.init_app(site_blueprint)
+# dev = flask_restful.Api()
+# dev.init_app(site_blueprint)
 
 
 from . import views

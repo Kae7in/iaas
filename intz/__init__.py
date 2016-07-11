@@ -6,7 +6,7 @@ import os
 
 # Configure app
 app = Flask(__name__)
-app.config['SERVER_NAME']='intz.herokuapp.com'
+app.config['SERVER_NAME']='intz.com:5000'
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 
@@ -23,11 +23,10 @@ login_manager.init_app(app)
 login_manager.login_view = 'site.login'
 
 
-from intz.dev import dev_blueprint
+# from intz.dev import dev_blueprint
 from intz.site import site_blueprint
 import intz.models
 
 
 # Blueprint registration
-app.register_blueprint(dev_blueprint, subdomain='dev')
 app.register_blueprint(site_blueprint)
