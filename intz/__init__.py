@@ -23,11 +23,10 @@ login_manager.init_app(app)
 login_manager.login_view = 'site.login'
 
 
-from intz.dev import dev_blueprint
+# from intz.dev import dev_blueprint
 from intz.site import site_blueprint
 import intz.models
 
 
 # Blueprint registration
-app.register_blueprint(dev_blueprint, subdomain='dev')
 app.register_blueprint(site_blueprint)
