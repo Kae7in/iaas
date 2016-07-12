@@ -6,7 +6,7 @@ import os
 
 # Configure app
 app = Flask(__name__)
-app.config['SERVER_NAME']='intz.herokuapp.com'
+app.config['SERVER_NAME']='intz.com:5000'
 app.config['PROPAGATE_EXCEPTIONS'] = True
 
 
